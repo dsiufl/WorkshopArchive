@@ -1,0 +1,588 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "source": [
+        "**Why Google Colab and how does it work?**\n",
+        "\n",
+        "1. No installation Required\n",
+        "2. Beginner Friendly\n",
+        "3. Code in Chunks\n",
+        "4. Doesn't Run in background"
+      ],
+      "metadata": {
+        "id": "Jk2CbPOwGmhN"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Some Helpful Shortcuts\n",
+        "# Ctrl Enter - Runs Cell\n",
+        "# Ctrl Z - Undo action within a cell\n",
+        "# Ctrl M Z - Undo cell action"
+      ],
+      "metadata": {
+        "id": "Cr0pvhzez-lG"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "print(\"Hello World\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "4K1R_06KXtTM",
+        "outputId": "3dc67316-d2ed-4a0a-a7f8-2c5ea96e8032"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Hello World\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# **Let's Code an AI Agent!**"
+      ],
+      "metadata": {
+        "id": "TIpMwPj9APmT"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Import Packages\n",
+        "from google.colab import auth, userdata\n",
+        "from googleapiclient.discovery import build\n",
+        "import re"
+      ],
+      "metadata": {
+        "id": "L3_k3HpbMZnt"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Connect Google Account to Colab\n",
+        "auth.authenticate_user()"
+      ],
+      "metadata": {
+        "id": "OyttlI2qMUCk"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Connect Secret Key\n",
+        "KEY = userdata.get(\"KEY\")"
+      ],
+      "metadata": {
+        "id": "gX-ZpS99a7Un"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Paste LLM code\n",
+        "# print(response.choices[0].message.content)\n",
+        "import openai"
+      ],
+      "metadata": {
+        "id": "PklCbfj4DteF"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# We'll make this a function for easy access\n",
+        "def call_LLM(user_prompt):\n",
+        "  client = openai.OpenAI(\n",
+        "      api_key = userdata.get(\"KEY\"),\n",
+        "      base_url=\"https://api.ai.it.ufl.edu\"\n",
+        "  )\n",
+        "\n",
+        "  response = client.chat.completions.create(\n",
+        "      model=\"gpt-oss-20b\",\n",
+        "      messages = [\n",
+        "          {\n",
+        "              \"content\": user_prompt\n",
+        "          }\n",
+        "      ]\n",
+        "  )\n",
+        "  return response.choices[0].message.content"
+      ],
+      "metadata": {
+        "id": "towsSKH-FBhE"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Test Function\n",
+        "call_LLM(\"hi\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 35
+        },
+        "id": "MSDWc5qcdAe-",
+        "outputId": "88d5f627-e300-4ff9-9270-fb280905fe1a"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "'Hello! How can I help you today?'"
+            ],
+            "application/vnd.google.colaboratory.intrinsic+json": {
+              "type": "string"
+            }
+          },
+          "metadata": {},
+          "execution_count": 13
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Google Drive API\n",
+        "drive_service = build('drive', 'v3')\n",
+        "\n",
+        "# Google Slides API\n",
+        "slides_service = build('slides', 'v1')"
+      ],
+      "metadata": {
+        "id": "vryfMJrdAdJj"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Installing an API\n",
+        "!pip install wikipedia-api\n",
+        "import wikipediaapi"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "9OgaAeitdy3A",
+        "outputId": "50413e96-6ce8-4406-8215-1e1bdfac3e06"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Collecting wikipedia-api\n",
+            "  Downloading wikipedia_api-0.8.1.tar.gz (19 kB)\n",
+            "  Preparing metadata (setup.py) ... \u001b[?25l\u001b[?25hdone\n",
+            "Requirement already satisfied: requests in /usr/local/lib/python3.12/dist-packages (from wikipedia-api) (2.32.4)\n",
+            "Requirement already satisfied: charset_normalizer<4,>=2 in /usr/local/lib/python3.12/dist-packages (from requests->wikipedia-api) (3.4.4)\n",
+            "Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.12/dist-packages (from requests->wikipedia-api) (3.11)\n",
+            "Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.12/dist-packages (from requests->wikipedia-api) (2.5.0)\n",
+            "Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.12/dist-packages (from requests->wikipedia-api) (2025.10.5)\n",
+            "Building wheels for collected packages: wikipedia-api\n",
+            "  Building wheel for wikipedia-api (setup.py) ... \u001b[?25l\u001b[?25hdone\n",
+            "  Created wheel for wikipedia-api: filename=Wikipedia_API-0.8.1-py3-none-any.whl size=15383 sha256=a3c821f721cd90f2b1ab391e0b72e11ab93ddaca525902a2e6acee5ae04d41b6\n",
+            "  Stored in directory: /root/.cache/pip/wheels/33/3c/79/b36253689d838af4a0539782853ac3cc38a83a6591ad570dde\n",
+            "Successfully built wikipedia-api\n",
+            "Installing collected packages: wikipedia-api\n",
+            "Successfully installed wikipedia-api-0.8.1\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def fetch_wikipedia_summary(topic):\n",
+        "\n",
+        "    print(f\"🔍 Fetching Wikipedia summary for: {topic}\")\n",
+        "\n",
+        "    wiki = wikipediaapi.Wikipedia('MyAIagent/1.0 (colab@example.com)')\n",
+        "    page = wiki.page(topic)\n",
+        "\n",
+        "    if not page.exists():\n",
+        "        return \"No Wikipedia page found.\"\n",
+        "\n",
+        "    print(\"✅ Wikipedia page found.\")\n",
+        "\n",
+        "    return page.summary[:10000]"
+      ],
+      "metadata": {
+        "id": "NkCHhbuKAd2d"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Test Wikipedia Function\n",
+        "fetch_wikipedia_summary(\"Lebron James\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 140
+        },
+        "id": "78CzNDibd3Ma",
+        "outputId": "fb6e2353-0682-4779-b8d6-2736eff5c9f1"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "🔍 Fetching Wikipedia summary for: Lebron James\n",
+            "✅ Wikipedia page found.\n"
+          ]
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "'LeBron Raymone James Sr. ( lə-BRON; born December 30, 1984) is an American professional basketball player for the Los Angeles Lakers of the National Basketball Association (NBA). Nicknamed \"King James\", he is the NBA\\'s all-time leading scorer and has won four NBA championships from 10 NBA Finals appearances, having made eight consecutive appearances between 2011 and 2018. He also won the inaugural NBA Cup in 2023 with the Lakers and has won three Olympic gold medals as a member of the U.S. national team. James is widely considered one of the greatest basketball players of all time.\\nIn addition to ranking fourth in NBA career assists and sixth in NBA career steals, James holds several individual honors, including four NBA MVP awards, four Finals MVP awards, the Rookie of the Year award, three All-Star Game MVP awards, the inaugural NBA Cup MVP, and the Olympics MVP in the 2024 Summer Olympics. A record 21-time All-Star and 21-time All-NBA selection (including a record 13 First Team selections), he has also made six All-Defensive Teams. The oldest active player in the NBA, he is tied with Vince Carter for the most seasons played and holds the record for the most minutes played in league history.\\nBorn and raised in Akron, Ohio, James gained national attention at St. Vincent–St. Mary High School and was heavily touted as a future NBA superstar for his all-around scoring, passing, athleticism and playmaking abilities. A prep-to-pro, James was selected by the Cleveland Cavaliers with the first overall pick of the 2003 NBA draft. He won Rookie of the Year and quickly established himself as one of the league\\'s premier players, leading Cleveland to its first NBA Finals appearance in 2007 and winning the scoring title in 2008. After winning back-to-back MVPs in 2009 and 2010, he left the Cavaliers and joined the Miami Heat as a free agent in 2010, a controversial move announced in the nationally televised special titled The Decision.\\nWith the Heat, James won his first two NBA championships in 2012 and 2013, earning MVP and Finals MVP honors both years. After four seasons in Miami, he returned to Cleveland in 2014, leading the Cavaliers to their first-ever championship in 2016 by overcoming a 3–1 deficit against the Golden State Warriors and ending the Cleveland sports curse. He signed with the Lakers in 2018, winning another title in 2020 and becoming the first player to win Finals MVP with three different teams. In 2023, he surpassed Kareem Abdul-Jabbar to become the NBA\\'s all-time leading scorer, and in 2024, he and his son Bronny became the first father-son teammates in league history. In 2025, James was inducted into the Naismith Memorial Basketball Hall of Fame as a member of the 2008 U.S. Olympic team (also known as the \"Redeem Team\"). He and Chris Paul became the first NBA players inducted into the Hall of Fame while still active.\\nOff the court, James has earned further wealth and fame from numerous endorsement contracts. He is the first player in NBA history to accumulate $1 billion in earnings as an active player. James has been featured in books, documentaries (including winning three Sports Emmy Awards as an executive producer), and television commercials. He was among Time\\'s 100 most influential people in the world in 2005, 2013, 2017, and 2019 — the most selections for a professional athlete. James has won 20 ESPY Awards, hosted Saturday Night Live, and starred in the sports film Space Jam: A New Legacy (2021). He has been a part-owner of Liverpool F.C. since 2011 and leads the LeBron James Family Foundation, which has opened an elementary school, housing complex, retail plaza, and medical center in Akron.'"
+            ],
+            "application/vnd.google.colaboratory.intrinsic+json": {
+              "type": "string"
+            }
+          },
+          "metadata": {},
+          "execution_count": 18
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def generate_slide_text(topic, wiki_text):\n",
+        "    slides_prompt = f\"\"\"\n",
+        "    You are an AI assistant creating a 8-slide Google Slides presentation on \"{topic}\".\n",
+        "    Use the Wikipedia text below to generate content.\n",
+        "\n",
+        "    Format your response exactly like this (no JSON, no markdown):\n",
+        "    Slide 1: <title>\n",
+        "    - Bullet 1\n",
+        "    - Bullet 2\n",
+        "    - Bullet 3\n",
+        "    Slide 2: <title>\n",
+        "    - Bullet 1\n",
+        "    - Bullet 2\n",
+        "    - Bullet 3\n",
+        "    ...\n",
+        "    Wikipedia text:\n",
+        "    {wiki_text}\n",
+        "    \"\"\"\n",
+        "\n",
+        "    text = call_LLM(slides_prompt)\n",
+        "    print(\"✅ Slides generated successfully.\")\n",
+        "    return text\n"
+      ],
+      "metadata": {
+        "id": "_q6jDu_r4r0S"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# Test generate_slide_text function\n",
+        "generate_slide_text(\"Lebron James\", fetch_wikipedia_summary(\"Lebron James\"))"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 159
+        },
+        "id": "M0knZ7eXejih",
+        "outputId": "957f641c-1d37-4b59-d516-b4db9168a45b"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "error",
+          "ename": "NameError",
+          "evalue": "name 'generate_slide_text' is not defined",
+          "traceback": [
+            "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+            "\u001b[0;31mNameError\u001b[0m                                 Traceback (most recent call last)",
+            "\u001b[0;32m/tmp/ipython-input-2578131201.py\u001b[0m in \u001b[0;36m<cell line: 0>\u001b[0;34m()\u001b[0m\n\u001b[1;32m      1\u001b[0m \u001b[0;31m# Test generate_slide_text function\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 2\u001b[0;31m \u001b[0mgenerate_slide_text\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\"\"\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m",
+            "\u001b[0;31mNameError\u001b[0m: name 'generate_slide_text' is not defined"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def create_google_slides_with_theme(presentation_title, slide_text):\n",
+        "    print(\"🧾 Creating Slides\")\n",
+        "\n",
+        "    template_id = \"10AgR2x2mDzqwEXmGplBbSMjTVKo_fRa0PU695yq6Z7s\"\n",
+        "    presentation_id = drive_service.files().copy(\n",
+        "        fileId=template_id, body={\"name\": presentation_title}\n",
+        "    ).execute()[\"id\"]\n",
+        "\n",
+        "    # Parse LLM output → slide data\n",
+        "    slides_data = []\n",
+        "    for section in slide_text.split(\"Slide \")[1:]:\n",
+        "        lines = section.strip().splitlines()\n",
+        "        if not lines:\n",
+        "            continue\n",
+        "        title = lines[0].split(\":\", 1)[-1].strip()\n",
+        "        bullets = [l.strip(\"- \").strip() for l in lines[1:] if l.startswith(\"-\")]\n",
+        "        slides_data.append((title, bullets))\n",
+        "\n",
+        "    # Ensure exactly 8 slides always\n",
+        "    while len(slides_data) < 8:\n",
+        "        slides_data.append((\" \", []))\n",
+        "    slides_data = slides_data[:8]\n",
+        "\n",
+        "    # Create 8 slides\n",
+        "    create_requests = [\n",
+        "        {\"createSlide\": {\"slideLayoutReference\": {\"predefinedLayout\": \"TITLE_AND_BODY\"}}}\n",
+        "        for _ in range(8)\n",
+        "    ]\n",
+        "\n",
+        "    slides_service.presentations().batchUpdate(\n",
+        "        presentationId=presentation_id,\n",
+        "        body={\"requests\": create_requests}\n",
+        "    ).execute()\n",
+        "\n",
+        "    slides = slides_service.presentations().get(\n",
+        "        presentationId=presentation_id\n",
+        "    ).execute()[\"slides\"]\n",
+        "\n",
+        "    # Fill slide text\n",
+        "    fill_requests = []\n",
+        "    for (title, bullets), slide in zip(slides_data, slides):\n",
+        "        title_id = slide[\"pageElements\"][0][\"objectId\"]\n",
+        "        body_id  = slide[\"pageElements\"][1][\"objectId\"]\n",
+        "        fill_requests += [\n",
+        "            {\"insertText\": {\"objectId\": title_id, \"insertionIndex\": 0, \"text\": title}},\n",
+        "            {\"insertText\": {\"objectId\": body_id, \"insertionIndex\": 0, \"text\": \"\\n\".join(\"• \"+b for b in bullets)}}\n",
+        "        ]\n",
+        "\n",
+        "    slides_service.presentations().batchUpdate(\n",
+        "        presentationId=presentation_id,\n",
+        "        body={\"requests\": fill_requests}\n",
+        "    ).execute()\n",
+        "\n",
+        "    return presentation_id"
+      ],
+      "metadata": {
+        "id": "nstWM878Sz5m"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# def create_google_slides_with_theme(presentation_title, slide_text):\n",
+        "#     print(\"🧾 Creating Slides\")\n",
+        "\n",
+        "#     # The ID of the Google Slides template we want to copy\n",
+        "#     template_id = \"1bn5y46yIVc0it1KlkPtPN93GjEj_ESpFQ1twxf4-ko8\"\n",
+        "\n",
+        "#     # Copy the template into your Google Drive and rename it to the new presentation title.\n",
+        "#     # The result returns a dictionary; we grab the \"id\" of the new presentation.\n",
+        "#     presentation_id = drive_service.files().copy(\n",
+        "#         fileId=template_id, body={\"name\": presentation_title}\n",
+        "#     ).execute()[\"id\"]\n",
+        "\n",
+        "#     # -------------------------\n",
+        "#     # Parse slide_text (which came from the LLM) into structured data.\n",
+        "#     # Expecting text formatted like:\n",
+        "#     #\n",
+        "#     # Slide 1: Title Here\n",
+        "#     # - Bullet A\n",
+        "#     # - Bullet B\n",
+        "#     #\n",
+        "#     # This code extracts those titles and bullet lists.\n",
+        "#     # -------------------------\n",
+        "#     slides_data = []\n",
+        "#     for section in slide_text.split(\"Slide \")[1:]:    # split into each \"Slide X\" section\n",
+        "#         lines = section.strip().splitlines()          # break into individual lines\n",
+        "#         if not lines:\n",
+        "#             continue\n",
+        "\n",
+        "#         # Extract slide title (text after first ':')\n",
+        "#         title = lines[0].split(\":\", 1)[-1].strip()\n",
+        "\n",
+        "#         # Extract bullet points (lines starting with \"-\")\n",
+        "#         bullets = [l.strip(\"- \").strip() for l in lines[1:] if l.startswith(\"-\")]\n",
+        "\n",
+        "#         # Store as tuple: (title, list_of_bullets)\n",
+        "#         slides_data.append((title, bullets))\n",
+        "\n",
+        "#     # -------------------------\n",
+        "#     # Force the presentation to always have exactly 8 slides.\n",
+        "#     # If fewer slides are provided, fill the rest with blank slides.\n",
+        "#     # If more than 8 are provided, cut extras.\n",
+        "#     # -------------------------\n",
+        "#     while len(slides_data) < 8:\n",
+        "#         slides_data.append((\" \", []))   # blank title and no bullets\n",
+        "\n",
+        "#     slides_data = slides_data[:8]\n",
+        "\n",
+        "#     # -------------------------\n",
+        "#     # Create 8 blank slides using the standard \"TITLE_AND_BODY\" layout.\n",
+        "#     # The Slides API requires requests to be sent in a batch.\n",
+        "#     # -------------------------\n",
+        "#     create_requests = [\n",
+        "#         {\"createSlide\": {\"slideLayoutReference\": {\"predefinedLayout\": \"TITLE_AND_BODY\"}}}\n",
+        "#         for _ in range(8)\n",
+        "#     ]\n",
+        "\n",
+        "#     slides_service.presentations().batchUpdate(\n",
+        "#         presentationId=presentation_id,\n",
+        "#         body={\"requests\": create_requests}\n",
+        "#     ).execute()\n",
+        "\n",
+        "#     # Retrieve the created slides so we can write text into them.\n",
+        "#     slides = slides_service.presentations().get(\n",
+        "#         presentationId=presentation_id\n",
+        "#     ).execute()[\"slides\"]\n",
+        "\n",
+        "#     # -------------------------\n",
+        "#     # Insert titles + bullet text into each slide\n",
+        "#     # -------------------------\n",
+        "#     fill_requests = []\n",
+        "#     for (title, bullets), slide in zip(slides_data, slides):\n",
+        "\n",
+        "#         # Slides have multiple text boxes; first is title box, second is body box.\n",
+        "#         title_id = slide[\"pageElements\"][0][\"objectId\"]\n",
+        "#         body_id  = slide[\"pageElements\"][1][\"objectId\"]\n",
+        "\n",
+        "#         # Queue text insertion requests for API\n",
+        "#         fill_requests += [\n",
+        "#             {\"insertText\": {\"objectId\": title_id, \"insertionIndex\": 0, \"text\": title}},\n",
+        "#             {\"insertText\": {\"objectId\": body_id, \"insertionIndex\": 0,\n",
+        "#                             \"text\": \"\\n\".join(\"• \" + b for b in bullets)}}\n",
+        "#         ]\n",
+        "\n",
+        "#     # Send all text insert operations to Slides API\n",
+        "#     slides_service.presentations().batchUpdate(\n",
+        "#         presentationId=presentation_id,\n",
+        "#         body={\"requests\": fill_requests}\n",
+        "#     ).execute()\n",
+        "\n",
+        "#     # Return the ID of the final presentation (useful for opening/sharing)\n",
+        "#     return presentation_id"
+      ],
+      "metadata": {
+        "id": "eYKUAgNESl-R"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def run_agent():\n",
+        "    topic = input(\"Enter a topic for your AI-generated presentation: \")\n",
+        "\n",
+        "    # Fetch Wikipedia summary\n",
+        "    wiki_text = fetch_wikipedia_summary(topic)\n",
+        "    if \"No Wikipedia page\" in wiki_text:\n",
+        "        print(\"⚠️ Could not find a Wikipedia page. Exiting.\")\n",
+        "        return\n",
+        "\n",
+        "    # 3Generate slide text using Gemini\n",
+        "    slide_text = generate_slide_text(topic, wiki_text)\n",
+        "\n",
+        "    # Create Slides from template with generated text\n",
+        "    presentation_title = f\"{topic} Slideshow\"\n",
+        "    presentation_id = create_google_slides_with_theme(presentation_title, slide_text)\n",
+        "\n",
+        "    # Output the link\n",
+        "    print(\"\\n🎉 All done!\")\n",
+        "    print(f\"👉 Your presentation is ready:\\nhttps://docs.google.com/presentation/d/{presentation_id}/edit\")"
+      ],
+      "metadata": {
+        "id": "gbmK62F-Auay"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "76c018f3",
+        "outputId": "326ec77f-a909-4617-9f18-aaca6a2cf24a"
+      },
+      "source": [
+        "run_agent()"
+      ],
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Enter a topic for your AI-generated presentation: Miami Heat\n",
+            "🔍 Fetching Wikipedia summary for: Miami Heat\n",
+            "✅ Wikipedia page found.\n",
+            "✅ Slides generated successfully.\n",
+            "🧾 Creating Slides\n",
+            "\n",
+            "🎉 All done!\n",
+            "👉 Your presentation is ready:\n",
+            "https://docs.google.com/presentation/d/1J1216UIUT0ppnddh5IWzU0YioEkkaQ-2hIE2BDt3LuU/edit\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
