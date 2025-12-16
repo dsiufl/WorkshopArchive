@@ -1,6 +1,4 @@
-# Welcome to Workshop Archive!
-
-Here you will find hands-on workshops hosted by organizations at the University of Florida.
+![Banner Image](./banner.png)
 
 ## Workshops Overview
 
