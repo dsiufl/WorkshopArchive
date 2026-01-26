@@ -25,6 +25,7 @@ Access workshop content quickly with concise descriptions and recognition of our
 | [Intro to R](./Workshops/Intro%20to%20R)                                | Introduction to programming in R.                | [Anjali](https://github.com/wahmbat)                                                                                     |
 | [Intro to AI Agents](./Workshops/Intro%20to%20AI%20Agents)              | Building an AI Agent in Python.                  | [Ragul](https://github.com/ragult419-cell)                                                                               |
 | [Python for NLP](./Workshops/Python_for_NLP)                            | Introduction to NLP concepts with Python         | [Tristan](https://github.com/tristanpank)                                                                                |
+| [Naive Bayes Spam Filtering](./Workshops/Naive%20Bayes%20Spam%20Filtering)                                | Exploring the theory of Naive Bayes Classification and its application to spam email filtering.                | [Anjali](https://github.com/wahmbat)
 
 ## How to Contribute
 
