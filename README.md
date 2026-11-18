@@ -27,6 +27,7 @@ Access workshop content quickly with concise descriptions and recognition of our
 | [Python for NLP](./Workshops/Python_for_NLP)                            | Introduction to NLP concepts with Python         | [Tristan](https://github.com/tristanpank)                                                                                |
 | [Naive Bayes Spam Filtering](./Workshops/Naive%20Bayes%20Spam%20Filtering)                                | Exploring the theory of Naive Bayes Classification and its application to spam email filtering.                | [Anjali](https://github.com/wahmbat)
 | [Markowitz Mean-Variance Portfolio Optimization](./Workshops/Markowitz%20MVO)                                | Introduction to the theory and code of Markowitz Mean-Variance Optimization—a mathematical framework commonly used in quantitative finance.                | [Anjali](https://github.com/wahmbat)
+| [Data Feminism](./Workshops/Data%20Feminism)                                | An introduction to the ethics and underlying theories of data feminism.                | [Anjali](https://github.com/wahmbat)
 
 ## How to Contribute
 
